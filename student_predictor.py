@@ -34,34 +34,20 @@ user_input = np.array([[study, sleep, classes]])
 prediction = model.predict(user_input)[0]
 confidence = model.predict_proba(user_input)[0][1]
 
-# 📊 Visualizations
-study_range = np.linspace(0, 10, 100)
-sleep_range = np.linspace(0, 10, 100)
-class_range = np.arange(0, 11)
+# 📊 Visual curve based on "study hours" (hold sleep/classes constant)
+study_range = np.linspace(0, 10, 100) # 0 to 10, 100 evenly spaced values.
+probs = []
 
-study_probs = [model.predict_proba([[s, sleep, classes]])[0][1] for s in study_range]
-sleep_probs = [model.predict_proba([[study, s, classes]])[0][1] for s in sleep_range]
-class_probs = [model.predict_proba([[study, sleep, c]])[0][1] for c in class_range]
-
-# 📈 Plotting all three curves
-fig, ax = plt.subplots(figsize=(10, 6))
-
-# Study curve
-ax.plot(study_range, study_probs, label="📚 Varying Study Hours")
-ax.scatter([study], [confidence], color="blue", s=80)
-
-# Sleep curve
-ax.plot(sleep_range, sleep_probs, label="😴 Varying Sleep Hours")
-
-# Classes curve
-ax.plot(class_range, class_probs, label="🏫 Varying Classes Attended", marker='o')
-
-# Styling
+# Plot
+fig, ax = plt.subplots()
+ax.plot(study_range, probs, label="Pass Probability (varying study)")
 ax.axhline(0.5, color="gray", linestyle="--", label="Threshold = 50%")
-ax.set_xlabel("Feature Value")
+ax.scatter([study], [confidence], color="blue", s=100, label="Your Prediction")
+
+ax.set_xlabel("Study Hours")
 ax.set_ylabel("Probability of Passing")
 ax.set_ylim(-0.1, 1.1)
-ax.set_title("📊 Logistic Regression: Feature Impact on Pass Probability")
+ax.set_title("📈 Sigmoid Curve: Logistic Regression")
 ax.legend()
 st.pyplot(fig)
 
