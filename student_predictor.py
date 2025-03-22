@@ -38,6 +38,9 @@ confidence = model.predict_proba(user_input)[0][1]
 study_range = np.linspace(0, 10, 100) # 0 to 10, 100 evenly spaced values.
 probs = []
 
+for s in study_range:
+    probs.append(model.predict_proba([[s, sleep, classes]])[0][1])
+
 # Plot
 fig, ax = plt.subplots()
 ax.plot(study_range, probs, label="Pass Probability (varying study)")
@@ -63,6 +66,16 @@ if uploaded_file:
     inputs = df[['study', 'sleep', 'classes']]
     df['Pass_Prob'] = model.predict_proba(inputs)[:, 1]
     df['Prediction'] = model.predict(inputs)
+
+    import seaborn as sns
+    
+    # 🎨 Plot: Study Hours vs Pass Probability
+    fig2, ax2 = plt.subplots()
+    sns.scatterplot(data=df, x='study', y='Pass_Prob', hue='Prediction', ax=ax2)
+    ax2.set_title("🧪 Study Hours vs Probability of Passing")
+    ax2.set_xlabel("Study Hours")
+    ax2.set_ylabel("Pass Probability")
+    st.pyplot(fig2)
 
     st.dataframe(df)
 
